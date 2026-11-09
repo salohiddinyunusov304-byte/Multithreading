@@ -1,27 +1,33 @@
 package org.example;
 
+import java.util.Date;
+import java.util.concurrent.*;
+
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        /// Atomicity - operatsiya buzilmasligi, 1 ta vazifa toliq bajarilishi kk, yarim yolda boshqa threadlar tomonidsn qoshilish bolmayd
+        /// Callable - Runnable bilan bir xil vazifa bajarib lekin malumot qaytaradi.
+        /// Future - callabledan qaytgan qiymatni ushlash uchun
 
-        // get() - joriy qiymatni qaytaradi
-        // set(..) - yangi qiymat ornatadi
-        // incredmentAndGet() - qiymatni 1 ga oshiradi va qaytaradi
-        // getAndIncrement() - Joriy qiymatni qaytaradi, keyin 1 ga oshiradi
-        // addAndGet(..) - berilgan qiymatni oshiradi va qaytaradi
-        // compareAndset(exp, upd) - agar joriy qiymat exp ga teng bolsa uni upg ga ozgartiradi
+        /// Avzaliklari:
+        // Exceptionlarni ushlash mumkin
 
-        /// Immutable class - 1 martta yaratilib ichidagi filed va metodlari ozgartirilmaydigan class (String, Integer, ...)
-        // class final
-        // fieldlar -> private final
-        // setter -> bolmaydi
-        // Construktor orqali boshlangich qiymat berilishi majburiy
-        // agar filedlar muttable bolsa ularning nusxasi qaytariladi
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-        /// Afzalliklari
-        // - thread-safe class kerak bolsa
+        Callable<Integer>  task = () -> {
+            System.out.println("Fonda og'ir hisob kitob ...");
+            Thread.sleep(3000);
+            int n = 10 * 5;
+            return n;
+        };
 
-        ImmutableClass immutableClass = new ImmutableClass("Salohiddin");
-        System.out.println(immutableClass);
+        Future<Integer> submit = executorService.submit(task);
+
+        try {
+            System.out.println(submit.get());
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } finally {
+            executorService.shutdown();
+        }
     }
 }
