@@ -1,32 +1,27 @@
 package org.example;
 
 public class Main {
-    private static int count = 0;
-
     public static void main(String[] args) throws InterruptedException {
-        /// Race Conditon - 2 ta thread 1 ta data ga murojat qilganda
-        // Synchronization
-        // Rentrant Lock
+        /// Atomicity - operatsiya buzilmasligi, 1 ta vazifa toliq bajarilishi kk, yarim yolda boshqa threadlar tomonidsn qoshilish bolmayd
 
-        Runnable runnable = (() -> {
-            for (int i = 0; i < 10000; i++) {
-                increment();
-            }
-        });
+        // get() - joriy qiymatni qaytaradi
+        // set(..) - yangi qiymat ornatadi
+        // incredmentAndGet() - qiymatni 1 ga oshiradi va qaytaradi
+        // getAndIncrement() - Joriy qiymatni qaytaradi, keyin 1 ga oshiradi
+        // addAndGet(..) - berilgan qiymatni oshiradi va qaytaradi
+        // compareAndset(exp, upd) - agar joriy qiymat exp ga teng bolsa uni upg ga ozgartiradi
 
-        Thread thread1 = new Thread(runnable);
-        Thread thread2 = new Thread(runnable);
+        /// Immutable class - 1 martta yaratilib ichidagi filed va metodlari ozgartirilmaydigan class (String, Integer, ...)
+        // class final
+        // fieldlar -> private final
+        // setter -> bolmaydi
+        // Construktor orqali boshlangich qiymat berilishi majburiy
+        // agar filedlar muttable bolsa ularning nusxasi qaytariladi
 
-        thread1.start();
-        thread2.start();
+        /// Afzalliklari
+        // - thread-safe class kerak bolsa
 
-        thread1.join();
-        thread2.join();
-
-        System.out.println(count);
-    }
-
-    public static void increment() {
-        count++;
+        ImmutableClass immutableClass = new ImmutableClass("Salohiddin");
+        System.out.println(immutableClass);
     }
 }
